@@ -3,6 +3,14 @@ pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet`;
 
+export const example2 = `two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen`;
+
 export const day1Input = `ckmb52fldxkseven3fkjgcbzmnr7
 gckhqpb6twoqnjxqplthree2fourkspnsnzxlz1
 2onetwocrgbqm7
