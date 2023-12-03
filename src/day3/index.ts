@@ -5,17 +5,16 @@ import {
   hashPoint,
   iterate,
   parseGrid,
-  unhashPoint,
   uniquePoints,
 } from "../grid/index.js";
 import { uniqueArray } from "../helpers/unique.js";
 import { day3Input } from "./input.js";
 
-type GridCell = number | "symbol" | "nil";
+type GridCell = number | "gear" | "symbol" | "nil";
 
 function getPartFromPoint(
   grid: Grid<GridCell>,
-  point: Point
+  point: Point,
 ): [Point, ...Point[]] {
   const result = [point];
 
@@ -65,7 +64,7 @@ export function part1(input = day3Input) {
     return "symbol";
   });
 
-  const partsNearSymbols = new Set<string>();
+  let sum = 0;
 
   iterate(grid, (symbolPoint, cell) => {
     if (cell !== "symbol") {
@@ -74,24 +73,20 @@ export function part1(input = day3Input) {
 
     const adjacents = getAdjacents(grid, symbolPoint, true);
 
-    for (const { point, cell } of adjacents) {
-      if (typeof cell === "number") {
-        partsNearSymbols.add(hashPoint(point));
-      }
-    }
+    const adjacentParts = adjacents
+      .filter(({ cell }) => typeof cell === "number")
+      .map(({ point }) => getPartFromPoint(grid, point));
+
+    const uniqueAdjacentParts = uniqueArray(adjacentParts, (part) =>
+      hashPoint(part[0]),
+    );
+
+    const adjacentPartsAsNumbers = uniqueAdjacentParts.map((points) =>
+      Number(points.map((p) => at(grid, p)).join("")),
+    );
+
+    sum += adjacentPartsAsNumbers.reduce((a, b) => a + b, 0);
   });
-
-  const allParts = [...partsNearSymbols].map((partNearSymbolStr) =>
-    getPartFromPoint(grid, unhashPoint(partNearSymbolStr))
-  );
-
-  // we can unique by the first point since we sorted the parts
-  const uniqueParts = uniqueArray(allParts, (part) => hashPoint(part[0]));
-
-  const sum = uniqueParts
-    .map((part) => part.map((p) => at(grid, p)).join(""))
-    .map((n) => Number(n))
-    .reduce((a, b) => a + b, 0);
 
   console.log(`⭐️ Part 1: ${sum}`);
 
@@ -99,7 +94,47 @@ export function part1(input = day3Input) {
 }
 
 export function part2(input = day3Input) {
-  const sum = Math.random() > -1 ? 456 : input.length;
+  const grid = parseGrid(input, (c): GridCell => {
+    if (c === ".") {
+      return "nil";
+    }
+
+    if (Number.isInteger(Number(c))) {
+      return Number(c);
+    }
+
+    return "symbol";
+  });
+
+  let sum = 0;
+
+  iterate(grid, (symbolPoint, cell) => {
+    if (cell !== "symbol") {
+      return;
+    }
+
+    const adjacents = getAdjacents(grid, symbolPoint, true);
+
+    const adjacentParts = adjacents
+      .filter(({ cell }) => typeof cell === "number")
+      .map(({ point }) => getPartFromPoint(grid, point));
+
+    const uniqueAdjacentParts = uniqueArray(adjacentParts, (part) =>
+      hashPoint(part[0]),
+    );
+
+    const adjacentPartsAsNumbers = uniqueAdjacentParts.map((points) =>
+      Number(points.map((p) => at(grid, p)).join("")),
+    );
+
+    if (adjacentPartsAsNumbers.length !== 2) {
+      return;
+    }
+
+    const gearRatio = adjacentPartsAsNumbers[0]! * adjacentPartsAsNumbers[1]!;
+
+    sum += gearRatio;
+  });
 
   console.log(`⭐️ Part 2: ${sum}`);
 

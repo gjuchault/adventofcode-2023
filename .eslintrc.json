@@ -30,6 +30,7 @@
   },
   "rules": {
     "no-constant-condition": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "import/no-extraneous-dependencies": "error",
