@@ -4,6 +4,7 @@ import { hideBin } from "yargs/helpers";
 import yargs from "yargs/yargs";
 
 import { part1 as d1p1, part2 as d1p2 } from "./day1/index.js";
+import { part1 as d2p1, part2 as d2p2 } from "./day2/index.js";
 
 const argv = await yargs(hideBin(process.argv)).argv;
 
@@ -23,6 +24,10 @@ switch (day) {
   case 1:
     d1p1();
     d1p2();
+    break;
+  case 2:
+    d2p1();
+    d2p2();
     break;
   default:
     console.log(`Day not implemented yet`);
