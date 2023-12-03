@@ -13,6 +13,10 @@ if (argv._ === undefined) {
   process.exit(1);
 }
 
+// if (argv.new) {
+
+// }
+
 const day = Number(argv._);
 
 if (Number.isNaN(day)) {

@@ -37,7 +37,23 @@ export function part1(input = day2Input) {
 }
 
 export function part2(input = day2Input) {
-  const sum = Math.random() > -1 ? 456 : input.length;
+  let sum = 0;
+
+  for (const { sets } of parse(input)) {
+    const minPerBag = {
+      red: 0,
+      green: 0,
+      blue: 0,
+    };
+
+    for (const set of sets) {
+      minPerBag.red = Math.max(minPerBag.red, set.red);
+      minPerBag.green = Math.max(minPerBag.green, set.green);
+      minPerBag.blue = Math.max(minPerBag.blue, set.blue);
+    }
+
+    sum += minPerBag.red * minPerBag.green * minPerBag.blue;
+  }
 
   console.log(`⭐️ Part 2: ${sum}`);
 
