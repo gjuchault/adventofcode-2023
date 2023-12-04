@@ -20,7 +20,32 @@ export function part1(input = day4Input) {
 }
 
 export function part2(input = day4Input) {
-  const sum = Math.random() > -1 ? 456 : input.length;
+  const game = parse(input);
+
+  const cardNumberByIndex = new Map<number, number>(
+    game.cards.map((c) => [c.index, 1]),
+  );
+
+  for (let index = 1; index <= game.cards.length; index++) {
+    const cardCount = cardNumberByIndex.get(index)!;
+    const card = game.cards[index - 1]!;
+
+    const matches = [...card.winningNumbers].filter((n) =>
+      card.numbersWeHave.has(n),
+    );
+
+    let count = 1;
+
+    while (count <= matches.length) {
+      cardNumberByIndex.set(
+        index + count,
+        cardNumberByIndex.get(index + count)! + cardCount,
+      );
+      count += 1;
+    }
+  }
+
+  const sum = [...cardNumberByIndex.values()].reduce((a, b) => a + b, 0);
 
   console.log(`⭐️ Part 2: ${sum}`);
 

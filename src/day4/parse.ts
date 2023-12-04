@@ -9,7 +9,7 @@ export type Game = {
 export function parse(input: string): Game {
   const cards = input.split("\n").map((cardLine, index) => {
     const numbers = cardLine
-      .replace(`Card ${(index + 1).toString().padStart(3, " ")}:`, "")
+      .replace(new RegExp(`Card \\s*${index + 1}:`), "")
       .trim()
       .split(" | ");
 
