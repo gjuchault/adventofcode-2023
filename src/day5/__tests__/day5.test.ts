@@ -1,18 +1,39 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { part1, part2, resolveMap } from "../index.js";
+import { locationToSeed, part1, part2, seedToLocation } from "../index.js";
 import { example } from "../input.js";
-import { parse } from "../parse.js";
+import { Game, parse } from "../parse.js";
 
-await describe("resolveMap", async () => {
+await describe("seedToLocation", async () => {
   await it("given the example map", () => {
     const test = parse(example);
 
-    assert.equal(resolveMap(test.maps[0]!, 79), 81);
-    assert.equal(resolveMap(test.maps[0]!, 14), 14);
-    assert.equal(resolveMap(test.maps[0]!, 55), 57);
-    assert.equal(resolveMap(test.maps[0]!, 13), 13);
+    const oneMapTest: Game = {
+      ...test,
+      maps: [test.maps[0]!],
+    };
+
+    assert.equal(seedToLocation(oneMapTest, 79), 81);
+    assert.equal(seedToLocation(oneMapTest, 14), 14);
+    assert.equal(seedToLocation(oneMapTest, 55), 57);
+    assert.equal(seedToLocation(oneMapTest, 13), 13);
+  });
+});
+
+await describe("locationToSeed", async () => {
+  await it("given the example map", () => {
+    const test = parse(example);
+
+    const oneMapTest: Game = {
+      ...test,
+      maps: [test.maps[0]!],
+    };
+
+    assert.equal(locationToSeed(oneMapTest, 81), 79);
+    assert.equal(locationToSeed(oneMapTest, 14), 14);
+    assert.equal(locationToSeed(oneMapTest, 57), 55);
+    assert.equal(locationToSeed(oneMapTest, 13), 13);
   });
 });
 
@@ -24,6 +45,6 @@ await describe("day 5 - part 1", async () => {
 
 await describe("day 5 - part 2", async () => {
   await it("should work with the example", () => {
-    assert.equal(part2(example), 456);
+    assert.equal(part2(example), 46);
   });
 });

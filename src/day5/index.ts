@@ -1,44 +1,94 @@
 import { day5Input } from "./input.js";
-import { Map, parse } from "./parse.js";
+import { Game, parse } from "./parse.js";
 
-export function resolveMap(map: Map, input: number): number {
-  for (const range of map.ranges) {
-    if (
-      input >= range.sourceRangeStart &&
-      input < range.sourceRangeStart + range.rangeLength
-    ) {
-      return range.destinationRangeStart + (input - range.sourceRangeStart);
+export function seedToLocation(game: Game, seed: number): number {
+  return game.maps.reduce((current, maps) => {
+    for (const {
+      destinationRangeStart,
+      rangeLength,
+      sourceRangeStart,
+    } of maps.ranges) {
+      if (
+        current >= sourceRangeStart &&
+        current <= sourceRangeStart + rangeLength - 1
+      ) {
+        return destinationRangeStart + (current - sourceRangeStart);
+      }
     }
-  }
 
-  return input;
+    return current;
+  }, seed);
+}
+
+export function locationToSeed(game: Game, location: number): number {
+  return game.maps.reduceRight((current, maps) => {
+    for (const {
+      destinationRangeStart,
+      rangeLength,
+      sourceRangeStart,
+    } of maps.ranges) {
+      if (
+        current >= destinationRangeStart &&
+        current <= destinationRangeStart + rangeLength - 1
+      ) {
+        return sourceRangeStart + (current - destinationRangeStart);
+      }
+    }
+
+    return current;
+  }, location);
 }
 
 export function part1(input = day5Input) {
   const game = parse(input);
-  const locations = [];
+  let minimumLocation = Number.POSITIVE_INFINITY;
 
   for (const seed of game.seeds) {
-    let current = seed;
+    const location = seedToLocation(game, seed);
 
-    for (const map of game.maps) {
-      current = resolveMap(map, current);
+    if (minimumLocation > location) {
+      minimumLocation = location;
     }
-
-    locations.push(current);
   }
 
-  const lowestLocation = Math.min(...locations);
+  console.log(`⭐️ Part 1: ${minimumLocation}`);
 
-  console.log(`⭐️ Part 1: ${lowestLocation}`);
+  return minimumLocation;
+}
 
-  return lowestLocation;
+function isValidSeed(game: Game, seed: number): boolean {
+  for (let i = 0; i < game.seeds.length; i += 2) {
+    if (seed >= game.seeds[i]! && seed < game.seeds[i]! + game.seeds[i + 1]!)
+      return true;
+  }
+  return false;
 }
 
 export function part2(input = day5Input) {
-  const sum = Math.random() > -1 ? 456 : input.length;
+  const game = parse(input);
 
-  console.log(`⭐️ Part 2: ${sum}`);
+  const candidateSeeds = game.maps
+    .flatMap((maps, i) =>
+      maps.ranges.map((map) =>
+        locationToSeed(
+          { ...game, maps: game.maps.slice(0, i + 1) },
+          map.destinationRangeStart,
+        ),
+      ),
+    )
+    .filter((seed) => isValidSeed(game, seed));
 
-  return sum;
+  let minimumLocation = Number.POSITIVE_INFINITY;
+
+  for (const seed of candidateSeeds) {
+    const location = seedToLocation(game, seed);
+
+    if (minimumLocation > location) {
+      minimumLocation = location;
+    }
+  }
+
+  console.log(`⭐️ Part 2: ${minimumLocation}`);
+
+  return minimumLocation;
 }
