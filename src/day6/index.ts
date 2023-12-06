@@ -38,9 +38,31 @@ export function part1(input = day6Input) {
 }
 
 export function part2(input = day6Input) {
-  const sum = Math.random() > -1 ? 456 : input.length;
+  const game = parse(input);
 
-  console.log(`⭐️ Part 2: ${sum}`);
+  const uniqueRace = {
+    time: Number(game.races.map(({ time }) => time).join("")),
+    currentRecord: Number(
+      game.races.map(({ currentRecord }) => currentRecord).join(""),
+    ),
+  };
 
-  return sum;
+  let waysToWinRace = 0;
+
+  for (
+    let buttonHoldMs = 0;
+    buttonHoldMs < uniqueRace.time;
+    buttonHoldMs += 1
+  ) {
+    if (
+      uniqueRace.currentRecord <
+      calculateDistance(buttonHoldMs, uniqueRace.time)
+    ) {
+      waysToWinRace += 1;
+    }
+  }
+
+  console.log(`⭐️ Part 1: ${waysToWinRace}`);
+
+  return waysToWinRace;
 }

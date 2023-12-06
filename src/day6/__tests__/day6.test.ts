@@ -25,6 +25,6 @@ await describe("day 6 - part 1", async () => {
 
 await describe("day 6 - part 2", async () => {
   await it("should work with the example", () => {
-    assert.equal(part2(example), 456);
+    assert.equal(part2(example), 71503);
   });
 });
