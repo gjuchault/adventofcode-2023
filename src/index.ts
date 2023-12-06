@@ -11,6 +11,10 @@ import { part1 as d2p1, part2 as d2p2 } from "./day2/index.js";
 import { part1 as d3p1, part2 as d3p2 } from "./day3/index.js";
 import { part1 as d4p1, part2 as d4p2 } from "./day4/index.js";
 import { part1 as d5p1, part2 as d5p2 } from "./day5/index.js";
+import { part1 as d6p1, part2 as d6p2 } from "./day6/index.js";
+import { part1 as d6p1, part2 as d6p2 } from "./day6/index.js";
+import { part1 as d6p1, part2 as d6p2 } from "./day6/index.js";
+import { part1 as d6p1, part2 as d6p2 } from "./day6/index.js";
 // template: import
 
 const argv = await yargs(hideBin(process.argv)).argv;
@@ -48,6 +52,22 @@ if (argv.new === undefined) {
     case 5:
       d5p1();
       d5p2();
+      break;
+    case 6:
+      d6p1();
+      d6p2();
+      break;
+    case 6:
+      d6p1();
+      d6p2();
+      break;
+    case 6:
+      d6p1();
+      d6p2();
+      break;
+    case 6:
+      d6p1();
+      d6p2();
       break;
     // template: case
     default:
