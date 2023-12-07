@@ -3,7 +3,11 @@ import { describe, it } from "node:test";
 
 import { part1, part2 } from "../index.js";
 import { example } from "../input.js";
-import { getHandType, sortGameTypeByBestTypeAscending } from "../poker.js";
+import {
+  getHandType,
+  getHandTypeJoker,
+  sortGameTypeByBestTypeAscending,
+} from "../poker.js";
 
 await describe("sortGameTypeByBestTypeAscending", async () => {
   await it("should sort first by type or by card in their order", () => {
@@ -82,13 +86,13 @@ await describe("sortGameTypeByBestTypeAscending", async () => {
       {
         players: [
           {
-            bid: 2,
-            index: 2,
+            bid: 1,
+            index: 1,
             hand: ["jack", "king", "king", "king", "two"],
           },
           {
-            bid: 1,
-            index: 1,
+            bid: 2,
+            index: 2,
             hand: ["queen", "queen", "queen", "queen", "two"],
           },
         ],
@@ -135,11 +139,14 @@ await describe("getHandType", async () => {
 
     assert.deepEqual(getHandType(["two", "three", "ten", "six", "four"]), {
       level: "highCard",
-      card: "ten",
     });
+  });
+});
 
+await describe("getHandTypeJoker", async () => {
+  await it("generates the best hand type", () => {
     assert.deepEqual(
-      getHandType(["jack", "king", "king", "king", "two"], true),
+      getHandTypeJoker(["jack", "king", "king", "king", "two"]),
       {
         level: "fourOfAKind",
         card: "king",
@@ -156,6 +163,6 @@ await describe("day 7 - part 1", async () => {
 
 await describe("day 7 - part 2", async () => {
   await it("should work with the example", () => {
-    assert.equal(part2(example), 456);
+    assert.equal(part2(example), 5905);
   });
 });

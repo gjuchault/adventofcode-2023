@@ -1,3 +1,4 @@
+import { fillCombination } from "../helpers/combinations.js";
 import { Game } from "./parse.js";
 
 export const cardsLevel = {
@@ -59,8 +60,12 @@ export function sortGameTypeByBestTypeAscending(
 ): Game {
   return {
     players: game.players.sort((playerA, playerB) => {
-      const handTypeA = getHandType(playerA.hand, joker);
-      const handTypeB = getHandType(playerB.hand, joker);
+      const handTypeA = joker
+        ? getHandTypeJoker(playerA.hand)
+        : getHandType(playerA.hand);
+      const handTypeB = joker
+        ? getHandTypeJoker(playerB.hand)
+        : getHandType(playerB.hand);
 
       if (handTypeA.level === handTypeB.level) {
         for (let i = 0; i < playerA.hand.length; i++) {
@@ -86,7 +91,39 @@ export function sortGameTypeByBestTypeAscending(
   };
 }
 
-export function getHandType(hand: Card[], joker = false): HandType {
+export function getHandTypeJoker(hand: Card[]): HandType {
+  const allCombinations = fillCombination<Card>(
+    hand,
+    "jack",
+    Object.keys(cardsLevel).filter((card) => card !== "jack") as Card[],
+  );
+
+  const bestCombination = allCombinations
+    .sort((cardsA, cardsB) => {
+      const handTypeA = getHandType(cardsA);
+      const handTypeB = getHandType(cardsB);
+
+      if (handTypeA.level === handTypeB.level) {
+        for (let i = 0; i < cardsA.length; i++) {
+          const cardA = cardsA[i]!;
+          const cardB = cardsB[i]!;
+
+          if (cardA === cardB) {
+            continue;
+          }
+
+          return cardsLevel[cardA] - cardsLevel[cardB];
+        }
+      }
+
+      return handTypeLevel[handTypeA.level] - handTypeLevel[handTypeB.level];
+    })
+    .at(-1)!;
+
+  return getHandType(bestCombination);
+}
+
+export function getHandType(hand: Card[]): HandType {
   const cardCounts: Partial<Record<Card, number>> = {};
 
   for (const card of hand) {
