@@ -13,6 +13,7 @@ import { part1 as d4p1, part2 as d4p2 } from "./day4/index.js";
 import { part1 as d5p1, part2 as d5p2 } from "./day5/index.js";
 import { part1 as d6p1, part2 as d6p2 } from "./day6/index.js";
 import { part1 as d7p1, part2 as d7p2 } from "./day7/index.js";
+import { part1 as d8p1, part2 as d8p2 } from "./day8/index.js";
 // template: import
 
 const argv = await yargs(hideBin(process.argv)).argv;
@@ -58,6 +59,10 @@ if (argv.new === undefined) {
     case 7:
       d7p1();
       d7p2();
+      break;
+    case 8:
+      d8p1();
+      d8p2();
       break;
     // template: case
     default:
